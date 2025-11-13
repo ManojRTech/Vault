@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Token Generated</title>
+</head>
+<body>
+  <h2>🎉 Token / IPFS Result</h2>
+
+  <p><b>Shared:</b> {{ field }}</p>
+
+  <p><b>Token:</b></p>
+  <div style="background:#eee;padding:10px;word-wrap:break-word;">{{ token }}</div>
+
+  {% if extra %}
+    <p><b>CID:</b> {{ extra.cid }}</p>
+    <p><b>Public URL / Gateway:</b> <a href="{{ extra.url }}" target="_blank">{{ extra.url }}</a></p>
+  {% endif %}
+
+  <p><b>Issued At (unix):</b> {{ issued }}</p>
+  <p><b>Expiry (unix or None):</b> {{ expiry }}</p>
+
+  <br><a href="/verify_access">Verify Token</a> | <a href="/tokens">View Tokens</a> | <a href="/">Home</a>
+</body>
+</html>

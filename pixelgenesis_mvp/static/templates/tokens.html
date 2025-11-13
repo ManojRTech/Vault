@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Active Tokens</title>
+</head>
+<body>
+  <h2>Active / Recent Tokens (Demo)</h2>
+
+  {% if message == 'revoked' %}
+    <p style="color:green;">Token revoked.</p>
+  {% elif message == 'not_found' %}
+    <p style="color:red;">Token not found.</p>
+  {% endif %}
+
+  <table border="1" cellpadding="6">
+    <tr>
+      <th>Token</th><th>Field</th><th>Value</th><th>Issued</th><th>Expiry</th><th>Remaining</th><th>Revoked</th><th>Action</th>
+    </tr>
+    {% for t in tokens %}
+      <tr>
+        <td style="max-width:300px;word-wrap:break-word;">{{ t.token }}</td>
+        <td>{{ t.field }}</td>
+        <td>{{ t.value }}</td>
+        <td>{{ t.issued }}</td>
+        <td>{{ t.expiry }}</td>
+        <td>{{ t.remaining }}</td>
+        <td>{{ t.revoked }}</td>
+        <td>
+          {% if not t.revoked %}
+            <form method="POST" action="/revoke_token" style="margin:0;">
+              <input type="hidden" name="token" value="{{ t.token }}">
+              <button type="submit">Revoke</button>
+            </form>
+          {% else %}
+            -
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+  </table>
+
+  <br><a href="/">Home</a>
+</body>
+</html>

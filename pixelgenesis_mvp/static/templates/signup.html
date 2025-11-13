@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="/static/style.css">
+    <title>Signup</title>
+</head>
+<body>
+
+<h1>DID Signup</h1>
+
+{% if registered %}
+    <h3>Signup Successful 🎉</h3>
+    <p><b>Your DID:</b> {{ did }}</p>
+    <p><b>Your Private Key (Keep Safe):</b> {{ private_key }}</p>
+    <p><b>Your Public Key:</b> {{ public_key }}</p>
+    <a class="btn" href="/">Go Home</a>
+{% else %}
+    <form method="POST">
+        <button class="btn" type="submit">Generate DID</button>
+    </form>
+{% endif %}
+
+</body>
+</html>

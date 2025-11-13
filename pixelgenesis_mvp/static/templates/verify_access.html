@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Verify Token</title>
+</head>
+<body>
+  <h2>Verify Access Token</h2>
+
+  <form method="POST">
+    <label>Enter Token:</label><br>
+    <input type="text" name="token" required style="width:400px;"><br><br>
+    <button type="submit">Verify</button>
+  </form>
+
+  {% if error %}
+    <p style="color:red;">{{ error }}</p>
+  {% endif %}
+
+  {% if success %}
+    <h3>Verified Data:</h3>
+    <p><b>Field:</b> {{ field }}</p>
+    <p><b>Value:</b> {{ value }}</p>
+    {% if file_url %}
+      <p><b>File URL (gateway):</b> <a href="{{ file_url }}" target="_blank">{{ file_url }}</a></p>
+    {% endif %}
+  {% endif %}
+
+  <br><a href="/">Back</a>
+</body>
+</html>

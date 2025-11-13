@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="/static/style.css">
+    <title>Login</title>
+</head>
+<body>
+
+<h1>DID Login</h1>
+
+{% if error %}
+<p class="error">{{ error }}</p>
+{% endif %}
+
+{% if success %}
+<h3>Login Successful 🎉</h3>
+<p>Identity Verified: {{ did }}</p>
+<a class="btn" href="/">Go Home</a>
+{% elif step == "sign" %}
+<p><b>DID:</b> {{ did }}</p>
+<p><b>Challenge:</b> {{ challenge }}</p>
+
+<form method="POST" action="/verify">
+    <input type="hidden" name="did" value="{{ did }}">
+    <input type="hidden" name="challenge" value="{{ challenge }}">
+    <label>Enter Private Key:</label>
+    <input type="text" name="private_key" required>
+    <button class="btn" type="submit">Verify</button>
+</form>
+
+{% else %}
+<form method="POST">
+    <label>Enter DID:</label>
+    <input type="text" name="did" required>
+    <button class="btn" type="submit">Next</button>
+</form>
+{% endif %}
+
+</body>
+</html>

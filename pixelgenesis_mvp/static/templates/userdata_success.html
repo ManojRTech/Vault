@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Data Stored</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<h2>🎉 Data Stored Successfully!</h2>
+
+<p><b>Name:</b> {{ name }}</p>
+<p><b>DOB:</b> {{ dob }}</p>
+<p><b>Gender:</b> {{ gender }}</p>
+
+<p><b>Aadhaar SHA-256 Hash:</b></p>
+<p style="word-wrap: break-word; max-width: 500px;">
+    {{ aadhaar_hash }}
+</p>
+
+<br>
+<a href="/" class="btn">Go Home</a>
+
+</body>
+</html>
