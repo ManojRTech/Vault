@@ -7,34 +7,41 @@ import crypto from 'crypto';
 const router = express.Router();
 
 router.post('/register', async (req, res) => {
-  const { username, password } = req.body;
-  const pwHash = await bcrypt.hash(password, 10);
+  try {
+    const { email, password } = req.body;
 
-  // generate keypair for DID
-  const { publicKey, privateKey } = crypto.generateKeyPairSync('ed25519');
-  const pubPem = publicKey.export({ type: 'spki', format: 'pem' });
-  const privPem = privateKey.export({ type: 'pkcs8', format: 'pem' });
+    const pwHash = await bcrypt.hash(password, 10);
 
-  const did =
-    'did:key:' +
-    crypto.createHash('sha256').update(pubPem).digest('hex').slice(0, 16);
+    const { publicKey, privateKey } = crypto.generateKeyPairSync('ed25519');
+    const pubPem = publicKey.export({ type: 'spki', format: 'pem' });
+    const privPem = privateKey.export({ type: 'pkcs8', format: 'pem' });
 
-  const result = await query(
-    'INSERT INTO users(username, password_hash, did, pubkey) VALUES($1,$2,$3,$4) RETURNING id',
-    [username, pwHash, did, pubPem]
-  );
+    const did =
+      'did:key:' +
+      crypto.createHash('sha256').update(pubPem).digest('hex').slice(0, 16);
 
-  const user = { id: result.rows[0].id, username, did, privPem };
-  const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-    expiresIn: '8h',
-  });
+    const result = await query(
+      'INSERT INTO users(email, password_hash, did, pubkey) VALUES($1,$2,$3,$4) RETURNING id',
+      [email, pwHash, did, pubPem]
+    );
 
-  res.json({ token, did, privPem });
+    const user = { id: result.rows[0].id, email, did, privPem };
+    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
+      expiresIn: '8h',
+    });
+
+    res.json({ message: 'User registered', token, did, privPem });
+  } catch (err) {
+    console.error(err); // <--- see the real error in console
+    res.status(500).json({ error: err.message || 'Internal server error' });
+  }
 });
 
+
+
 router.post('/login', async (req, res) => {
-  const { username, password } = req.body;
-  const r = await query('SELECT * FROM users WHERE username=$1', [username]);
+  const { email, password } = req.body;  
+  const r = await query('SELECT * FROM users WHERE email=$1', [email]);
   if (r.rows.length === 0)
     return res.status(401).json({ error: 'Invalid credentials' });
 
