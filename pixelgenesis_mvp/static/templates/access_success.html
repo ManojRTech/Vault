@@ -1,24 +1,97 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Token Generated</title>
+  <title>Token Created</title>
+  <link rel="stylesheet" href="/static/style.css">
+
+  <style>
+    .info-box {
+      background: #f7faff;
+      padding: 15px;
+      border-radius: 10px;
+      border: 1px solid #c9dffc;
+      margin-bottom: 20px;
+    }
+
+    .success {
+      background: #e9ffe9;
+      padding: 12px;
+      border: 1px solid #7ed957;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-weight: bold;
+      color: #1b7e26;
+    }
+
+    .share-box {
+      background: #fff8e6;
+      border: 1px solid #f1d08b;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+
+    code {
+      background: #efefef;
+      padding: 4px 6px;
+      border-radius: 4px;
+      display: inline-block;
+      font-size: 14px;
+      word-break: break-all;
+    }
+
+    ul { margin-top: 10px; }
+  </style>
+
 </head>
 <body>
-  <h2>🎉 Token / IPFS Result</h2>
 
-  <p><b>Shared:</b> {{ field }}</p>
+<div class="container">
 
-  <p><b>Token:</b></p>
-  <div style="background:#eee;padding:10px;word-wrap:break-word;">{{ token }}</div>
+  <div class="success">🎉 Token Generated Successfully!</div>
 
-  {% if extra %}
-    <p><b>CID:</b> {{ extra.cid }}</p>
-    <p><b>Public URL / Gateway:</b> <a href="{{ extra.url }}" target="_blank">{{ extra.url }}</a></p>
+  <div class="info-box">
+    <p><b>Token:</b><br>
+      <code>{{ token }}</code>
+    </p>
+
+    <p><b>Field / Mode:</b> {{ field }}</p>
+
+    {% if extra %}
+      <p><b>CID:</b><br><code>{{ extra.cid }}</code></p>
+      <p><b>IPFS / Local URL:</b><br>
+        <a href="{{ extra.url }}" target="_blank">{{ extra.url }}</a>
+      </p>
+    {% endif %}
+  </div>
+
+  <!-- 🔑 Shamir Secret Shares (only if encryption used) -->
+  {% if shares %}
+    <div class="share-box">
+      <h3>🔐 Shamir Secret Shares (Demo)</h3>
+      <p>
+        Your file was encrypted using AES-256.<br>
+        To recover the encryption key, ANY <b>2 out of these 3 shares</b> are enough.
+      </p>
+
+      <ul>
+        {% for s in shares %}
+          <li><code>{{ s }}</code></li>
+        {% endfor %}
+      </ul>
+
+      <p style="margin-top:10px;">
+        Keep these shares safe — losing them means no one can decrypt the file 🔒
+      </p>
+    </div>
   {% endif %}
 
-  <p><b>Issued At (unix):</b> {{ issued }}</p>
-  <p><b>Expiry (unix or None):</b> {{ expiry }}</p>
+  <br>
 
-  <br><a href="/verify_access">Verify Token</a> | <a href="/tokens">View Tokens</a> | <a href="/">Home</a>
+  <a class="btn" href="/verify_access">Verify Token</a>
+  <a class="btn" href="/tokens">View All Tokens</a>
+
+</div>
+
 </body>
 </html>
