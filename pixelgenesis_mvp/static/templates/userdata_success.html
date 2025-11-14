@@ -6,19 +6,26 @@
 </head>
 <body>
 
-<h2>🎉 Data Stored Successfully!</h2>
+<div class="container">
 
-<p><b>Name:</b> {{ name }}</p>
-<p><b>DOB:</b> {{ dob }}</p>
-<p><b>Gender:</b> {{ gender }}</p>
+    <div class="success">✅ User Profile Saved Successfully!</div>
 
-<p><b>Aadhaar SHA-256 Hash:</b></p>
-<p style="word-wrap: break-word; max-width: 500px;">
-    {{ aadhaar_hash }}
-</p>
+    <p><b>Name:</b> {{ name }}</p>
+    <p><b>Date of Birth:</b> {{ dob }}</p>
+    <p><b>Gender:</b> {{ gender }}</p>
 
-<br>
-<a href="/" class="btn">Go Home</a>
+    <div class="hash-box">
+        <h3>🔐 Aadhaar SHA-256 Hash:</h3>
+        <p class="mono">{{ aadhaar_hash }}</p>
+        <small>This hashed Aadhaar is used for privacy-preserving verifications.</small>
+    </div>
+
+    <br>
+
+    <a class="btn" href="/">Go Home</a>
+    <a class="btn" href="/access_request">Generate Token</a>
+
+</div>
 
 </body>
 </html>
