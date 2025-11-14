@@ -1,66 +1,198 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Access Request (Mode A / Mode B / IPFS)</title>
+  <title>Generate Access Token</title>
+  <link rel="stylesheet" href="/static/style.css">
+
+  <style>
+    body {
+      background: #fdfdfd;
+      color: #222;
+    }
+
+    h2 {
+      color: #0a2540;
+    }
+
+    .section-box {
+      background: #ffffff;
+      padding: 18px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      border: 1px solid #d1d5db; /* light grey */
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .label-title {
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: block;
+      color: #1f2937; /* dark grey */
+    }
+
+    select, input[type="text"], input[type="number"], input[type="file"] {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1; /* border grey */
+      margin-bottom: 10px;
+      font-size: 14px;
+      background: #fafafa;
+    }
+
+    select:focus, input:focus {
+      border-color: #3b82f6; /* blue focus */
+      outline: none;
+      background: #ffffff;
+    }
+
+    .encrypt-box {
+      background: #e7f2ff;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #93c5fd;
+      margin-top: 10px;
+    }
+
+    small {
+      color: #6b7280;
+      display: block;
+      margin-top: 5px;
+    }
+
+    /* BUTTON FIX */
+    .btn {
+      display: inline-block;
+      background: #2563eb;   /* blue */
+      color: white !important;
+      padding: 10px 18px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      margin-right: 10px;
+      transition: 0.2s;
+    }
+
+    .btn:hover {
+      background: #1e40af;  /* dark blue */
+    }
+
+    button[type="submit"] {
+      background: #16a34a; /* green */
+      border: none;
+      color: white;
+      padding: 12px 22px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    button[type="submit"]:hover {
+      background: #0f7a36;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      padding-top: 20px;
+    }
+  </style>
+
 </head>
 <body>
-  <h2>Step 5 — Request Data Access or Upload File to IPFS</h2>
 
-  {% if error %}
-    <p style="color:red;">{{ error }}</p>
-  {% endif %}
+<div class="container">
 
-  <form method="POST" enctype="multipart/form-data">
-    <label>Mode:</label><br>
+<h2>🎫 Generate Access Token</h2>
+
+{% if error %}
+  <div class="error">{{ error }}</div>
+{% endif %}
+
+<form method="POST" enctype="multipart/form-data">
+
+  <!-- MODE SELECTOR -->
+  <div class="section-box">
+    <label class="label-title">Select Mode:</label>
     <select name="mode" id="mode_select" onchange="onModeChange()">
-      <option value="value">Mode A — Direct Value (allowed fields)</option>
-      <option value="predicate">Mode B — Predicate (selective disclosure)</option>
-      <option value="file">Upload File → IPFS (file access token)</option>
-    </select><br><br>
+      <option value="value">Mode A — Share Specific Field</option>
+      <option value="predicate">Mode B — Predicate Check</option>
+      <option value="file">Mode C — Upload File → IPFS (Encrypted Optional)</option>
+    </select>
+  </div>
 
-    <div id="value_block">
-      <label>Field (Mode A):</label><br>
-      <select name="field">
-        <option value="gender">gender</option>
-        <option value="aadhaar_hash">aadhaar_hash</option>
-        <option value="dob">dob</option>
-        <option value="address">address</option>
-      </select><br><br>
+  <!-- MODE A: VALUE -->
+  <div id="value_block" class="section-box">
+    <label class="label-title">Select Field:</label>
+    <select name="field">
+      <option value="name">Name</option>
+      <option value="dob">Date of Birth</option>
+      <option value="gender">Gender</option>
+      <option value="aadhaar_hash">Aadhaar Hash</option>
+    </select>
+    <small>Only whitelisted fields can be shared.</small>
+  </div>
+
+  <!-- MODE B: PREDICATE -->
+  <div id="predicate_block" class="section-box" style="display:none;">
+    <label class="label-title">Predicate Field</label>
+    <input type="text" name="pred_field" placeholder="e.g. age, gender, dob">
+
+    <label class="label-title">Condition</label>
+    <select name="op">
+      <option value="gt">Greater than (gt)</option>
+      <option value="ge">Greater or equal (ge)</option>
+      <option value="eq">Equal (eq)</option>
+      <option value="in">Contains / In (in)</option>
+    </select>
+
+    <label class="label-title">Compare Value</label>
+    <input type="text" name="pred_value" placeholder="e.g. 18 / male / BLR">
+
+    <small>Example: age > 18 OR gender == male</small>
+  </div>
+
+  <!-- MODE C: FILE UPLOAD -->
+  <div id="file_block" class="section-box" style="display:none;">
+    <label class="label-title">Upload File:</label>
+    <input type="file" name="file">
+
+    <div class="encrypt-box">
+      <label>
+        <input type="checkbox" name="encrypt">
+        🔐 Encrypt file before upload (AES-256 + Shamir 2-of-3 Shares)
+      </label>
     </div>
 
-    <div id="predicate_block" style="display:none;">
-      <label>Predicate (Mode B):</label><br>
-      <select name="op">
-        <option value="gt">gt (greater than)</option>
-        <option value="ge">ge (greater or equal)</option>
-        <option value="eq">eq (equal)</option>
-        <option value="in">in (membership)</option>
-      </select>
-      <input type="text" name="pred_field" placeholder="field (e.g. age, gender, address_city)">
-      <input type="text" name="pred_value" placeholder="value (e.g. 18 or male)">
-      <br><br>
-    </div>
+    <small>Your file is encrypted locally before upload.</small>
+  </div>
 
-    <div id="file_block" style="display:none;">
-      <label>Choose file to upload to IPFS:</label><br>
-      <input type="file" name="file"><br><br>
-    </div>
+  <!-- TTL -->
+  <div class="section-box">
+    <label class="label-title">TTL (Time To Live)</label>
+    <input type="number" name="ttl_seconds" placeholder="300">
+    <small>0 = never expires | blank = default 300s</small>
+  </div>
 
-    <label>Token TTL seconds (0 = no expiry, blank = default 300s):</label><br>
-    <input type="number" name="ttl_seconds" min="0" placeholder="300"><br><br>
+  <button type="submit">Generate Token</button>
 
-    <button type="submit">Generate Token / Upload</button>
-  </form>
+</form>
 
-  <br><a href="/">Home</a> | <a href="/tokens">Tokens (demo)</a>
+<br>
+<a class="btn" href="/">Home</a>
+
+</div>
 
 <script>
 function onModeChange(){
-  const m = document.getElementById('mode_select').value;
-  document.getElementById('value_block').style.display = (m==='value') ? 'block' : 'none';
-  document.getElementById('predicate_block').style.display = (m==='predicate') ? 'block' : 'none';
-  document.getElementById('file_block').style.display = (m==='file') ? 'block' : 'none';
+  let m = document.getElementById("mode_select").value;
+  document.getElementById("value_block").style.display = (m==="value") ? "block" : "none";
+  document.getElementById("predicate_block").style.display = (m==="predicate") ? "block" : "none";
+  document.getElementById("file_block").style.display = (m==="file") ? "block" : "none";
 }
 </script>
+
 </body>
 </html>
