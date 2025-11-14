@@ -1,15 +1,77 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <title>PixelGenesis MVP</title>
     <link rel="stylesheet" href="/static/style.css">
-    <title>PixelGenesis DID MVP</title>
+    <style>
+        /* Extra override for clear visibility */
+        a {
+            color: #4DA8FF !important;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        a:hover {
+            color: #8BCCFF !important;
+            text-decoration: underline;
+        }
+
+        .home-card {
+            background: rgba(30,30,40,0.9);
+            border-radius: 18px;
+            padding: 35px;
+            max-width: 420px;
+            margin: 80px auto;
+            box-shadow: 0px 0px 25px rgba(0,0,0,0.4);
+        }
+
+        .home-title {
+            font-size: 27px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .home-sub {
+            font-size: 15px;
+            color: #bbb;
+            margin-bottom: 25px;
+        }
+
+        ul.links-list {
+            list-style: none;
+            padding-left: 0;
+        }
+        ul.links-list li {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+
+        body {
+            background: radial-gradient(circle at top, #1b263b, #0d1b2a);
+        }
+    </style>
 </head>
 <body>
-    <h1>PixelGenesis: DID Authentication MVP</h1>
-    <a class="btn" href="/signup">Signup</a>
-    <a class="btn" href="/login">Login</a>
-<a href="/userdata">Store User Data (Step 2)</a><br>
-<a href="/access_request">Step 3: Data Access Request</a><br>
+
+<div class="home-card">
+    
+    <div class="home-title">🌐 PixelGenesis — Decentralized Identity MVP</div>
+    <div class="home-sub">
+        A lightweight demo for DID, selective disclosure, AES encryption, Shamir recovery & IPFS storage.
+    </div>
+
+    <ul class="links-list">
+
+        <li>🆔 <a href="/signup">Create DID</a></li>
+        <li>🔐 <a href="/login">Login</a></li>
+        <li>📄 <a href="/userdata">Add User Data</a></li>
+        <li>🎫 <a href="/access_request">Generate Token</a></li>
+        <li>✅<a href="/verify_access">Verify Token</a></li>
+        <li>📑 <a href="/tokens">Tokens List</a></li>
+        <li>🔑 <a href="/shamir/recover">Recover Key (Shamir)</a></li>
+        <li>🖊 <a href="/vc/sign">Sign VC</a></li>
+
+    </ul>
+</div>
 
 </body>
 </html>
