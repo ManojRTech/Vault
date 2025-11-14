@@ -1,24 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <title>Create DID</title>
     <link rel="stylesheet" href="/static/style.css">
-    <title>Signup</title>
 </head>
 <body>
 
-<h1>DID Signup</h1>
+<div class="container">
 
-{% if registered %}
-    <h3>Signup Successful 🎉</h3>
-    <p><b>Your DID:</b> {{ did }}</p>
-    <p><b>Your Private Key (Keep Safe):</b> {{ private_key }}</p>
-    <p><b>Your Public Key:</b> {{ public_key }}</p>
-    <a class="btn" href="/">Go Home</a>
-{% else %}
-    <form method="POST">
-        <button class="btn" type="submit">Generate DID</button>
-    </form>
-{% endif %}
+    <h2>🆔 Create Decentralized ID (DID)</h2>
+
+    {% if registered %}
+        <div class="success">🎉 DID Created Successfully!</div>
+
+        <p><b>Your DID:</b></p>
+        <div class="code-box">{{ did }}</div>
+
+        <p><b>Your Public Key:</b></p>
+        <div class="code-box">{{ public_key }}</div>
+
+        <p><b>Your Private Key (Store Safely!):</b></p>
+        <div class="code-box warn">{{ private_key }}</div>
+
+        <br>
+        <a class="btn" href="/login">Login with DID</a>
+        <a class="btn" href="/">Home</a>
+
+    {% else %}
+
+        <p>Click the button below to generate a new DID using Ed25519 keys.</p>
+
+        <form method="POST">
+            <button type="submit">Generate DID</button>
+        </form>
+
+        <br>
+        <a href="/">Home</a>
+
+    {% endif %}
+
+</div>
 
 </body>
 </html>
