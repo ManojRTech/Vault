@@ -2,43 +2,157 @@
 <html>
 <head>
   <title>Active Tokens</title>
+  <link rel="stylesheet" href="/static/style.css">
+
+  <style>
+      table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-top: 20px;
+      }
+
+      th {
+          background: #1e88e5;
+          color: white;
+          padding: 10px;
+          text-align: left;
+          font-size: 15px;
+      }
+
+      td {
+          padding: 10px;
+          border-bottom: 1px solid #dddddd;
+          font-size: 14px;
+      }
+
+      tr:hover { background: #f5faff; }
+
+      .badge {
+          padding: 4px 8px;
+          border-radius: 6px;
+          color: white;
+          font-size: 12px;
+          font-weight: bold;
+      }
+
+      .mode-value { background: #43a047; }
+      .mode-predicate { background: #ff8f00; }
+      .mode-file { background: #3949ab; }
+
+      .revoked-badge { background: #d32f2f; }
+      .active-badge { background: #43a047; }
+
+      .btn-revoke {
+          background: #d32f2f;
+          color: white;
+          padding: 6px 12px;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+      }
+      .btn-revoke:hover {
+          background: #b71c1c;
+      }
+
+      .msg-box {
+          padding: 12px;
+          border-radius: 8px;
+          margin-bottom: 20px;
+          font-weight: bold;
+      }
+      .msg-success { background: #e9ffe9; border: 1px solid #7ed957; color: #1b7e26; }
+      .msg-error   { background: #ffecec; border: 1px solid #ff7070; color: #b30000; }
+
+      .small { font-size: 12px; color: #555; }
+  </style>
 </head>
 <body>
-  <h2>Active / Recent Tokens (Demo)</h2>
 
-  {% if message == 'revoked' %}
-    <p style="color:green;">Token revoked.</p>
-  {% elif message == 'not_found' %}
-    <p style="color:red;">Token not found.</p>
-  {% endif %}
+<div class="container">
 
-  <table border="1" cellpadding="6">
+<h2>📄 Active / Recent Tokens</h2>
+
+{% if message == 'revoked' %}
+  <div class="msg-box msg-success">✔ Token revoked successfully.</div>
+{% elif message == 'not_found' %}
+  <div class="msg-box msg-error">❌ Token not found.</div>
+{% endif %}
+
+<table>
+  <tr>
+    <th>Token</th>
+    <th>Mode</th>
+    <th>Field / CID</th>
+    <th>Value / Result</th>
+    <th>Issued</th>
+    <th>Expiry</th>
+    <th>Remaining</th>
+    <th>Status</th>
+    <th>Revoked At</th>
+    <th>Action</th>
+  </tr>
+
+  {% for t in tokens %}
     <tr>
-      <th>Token</th><th>Field</th><th>Value</th><th>Issued</th><th>Expiry</th><th>Remaining</th><th>Revoked</th><th>Action</th>
-    </tr>
-    {% for t in tokens %}
-      <tr>
-        <td style="max-width:300px;word-wrap:break-word;">{{ t.token }}</td>
-        <td>{{ t.field }}</td>
-        <td>{{ t.value }}</td>
-        <td>{{ t.issued }}</td>
-        <td>{{ t.expiry }}</td>
-        <td>{{ t.remaining }}</td>
-        <td>{{ t.revoked }}</td>
-        <td>
-          {% if not t.revoked %}
-            <form method="POST" action="/revoke_token" style="margin:0;">
-              <input type="hidden" name="token" value="{{ t.token }}">
-              <button type="submit">Revoke</button>
-            </form>
-          {% else %}
-            -
-          {% endif %}
-        </td>
-      </tr>
-    {% endfor %}
-  </table>
+      <td style="word-break: break-all;">{{ t.token }}</td>
 
-  <br><a href="/">Home</a>
+      <td>
+        {% if t.mode == 'value' %}
+          <span class="badge mode-value">VALUE</span>
+        {% elif t.mode == 'predicate' %}
+          <span class="badge mode-predicate">PREDICATE</span>
+        {% elif t.mode == 'file' %}
+          <span class="badge mode-file">FILE</span>
+        {% endif %}
+      </td>
+
+      <td style="word-break: break-all;">{{ t.field }}</td>
+
+      <td style="word-break: break-all;">{{ t.value }}</td>
+
+      <td>{{ t.issued }}</td>
+
+      <td>{{ t.expiry }}</td>
+
+      <td>
+        {% if t.remaining == "Expired" %}
+          <span style="color:#d32f2f; font-weight:bold;">Expired</span>
+        {% elif t.remaining == "Never" %}
+          <span style="color:#3949ab; font-weight:bold;">Never</span>
+        {% else %}
+          <span style="color:#43a047; font-weight:bold;">{{ t.remaining }}</span>
+        {% endif %}
+      </td>
+
+      <td>
+        {% if t.revoked %}
+          <span class="badge revoked-badge">REVOKED</span>
+        {% else %}
+          <span class="badge active-badge">ACTIVE</span>
+        {% endif %}
+      </td>
+
+      <td>{{ t.revoked_at }}</td>
+
+      <td>
+        {% if not t.revoked %}
+          <form method="POST" action="/revoke_token" style="margin:0;">
+            <input type="hidden" name="token" value="{{ t.token }}">
+            <button class="btn-revoke" type="submit">Revoke</button>
+          </form>
+        {% else %}
+          —
+        {% endif %}
+      </td>
+    </tr>
+  {% endfor %}
+</table>
+
+<br>
+<a href="/">Home</a>
+
+</div>
+
 </body>
 </html>
+
