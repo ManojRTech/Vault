@@ -1,37 +1,47 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>User Data Store</title>
+    <title>Add User Data</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
 
-<h2>Step 2 — Store User Details</h2>
+<div class="container">
 
-<form method="POST">
+    <h2>👤 Add User Profile</h2>
+    <p class="subtitle">This data will be hashed & used for selective disclosure.</p>
 
-    <label>Name:</label><br>
-    <input type="text" name="name" required><br><br>
+    {% if error %}
+      <div class="error">{{ error }}</div>
+    {% endif %}
 
-    <label>Date of Birth:</label><br>
-    <input type="date" name="dob" required><br><br>
+    <form method="POST">
 
-    <label>Gender:</label><br>
-    <select name="gender" required>
-        <option>Male</option>
-        <option>Female</option>
-        <option>Other</option>
-    </select><br><br>
+        <label>Full Name:</label>
+        <input type="text" name="name" required>
 
-    <label>Aadhaar Number:</label><br>
-    <input type="text" name="aadhaar" maxlength="12" required><br><br>
+        <label>Date of Birth:</label>
+        <input type="date" name="dob" required>
 
-    <button type="submit">Submit</button>
+        <label>Gender:</label>
+        <select name="gender" required>
+            <option value="">Select</option>
+            <option>male</option>
+            <option>female</option>
+            <option>other</option>
+        </select>
 
-</form>
+        <label>Aadhaar Number:</label>
+        <input type="text" name="aadhaar" minlength="12" maxlength="12" placeholder="12-digit" required>
 
-<br>
-<a href="/">Back</a>
+        <button type="submit">Save Profile</button>
+    </form>
+
+    <br>
+    <a href="/">Home</a>
+
+</div>
 
 </body>
 </html>
+
